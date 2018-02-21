@@ -25,7 +25,13 @@
                     <br />
                     <br />
                     <strong>Contact:</strong><br />
-                    {{ contact }}    
+                    {{ contact }} 
+                    
+                    <h2>S'inscrire à la newsletter</h2>
+                    <form>
+                        <input type="text" placeholder="Votre email" v-model="emailNewsletter">
+                        <button v-bind:disabled="emailInvalid" v-bind:class="{ active: !emailInvalid }">M'inscrire</button>
+                    </form>
                 </p>
             </div>
         </div>
@@ -43,11 +49,16 @@
                 À la différence des autres frameworks monolithiques, Vue a été conçu et pensé pour pouvoir être adopté de manière incrémentale. 
                 Le cœur de la bibliothèque est concentré uniquement sur la partie vue, et il est vraiment simple de l’intégrer avec d’autres 
                 bibliothèques ou projets existants. D’un autre côté, Vue est tout à fait capable de faire tourner des applications web monopages 
-                quand il est couplé avec des outils modernes et des bibliothèques complémentaires.`
+                quand il est couplé avec des outils modernes et des bibliothèques complémentaires.`,
+                emailNewsletter: ''
             },
             computed: {
                 contact: function(){
                     return 'Email: '+ this.email + ' tel: ' + this.phone;
+                },
+                emailInvalid: function(){
+                    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                    return !re.test(String(this.emailNewsletter).toLowerCase());
                 }
             },
             filters: {
