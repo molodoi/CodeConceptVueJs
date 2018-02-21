@@ -48,6 +48,7 @@
                         </my-other-card>
                         <!--li v-for="user in users" :key="user.id">{{ user.username }}</li-->
                         <user-list v-bind:users="users" v-bind:guest-user="guests"></user-list>
+                        <guest-list v-bind:guests="guests" v-if="guests != ''"></guest-list>
                     </ul>
                 </div>
             </div>
@@ -65,10 +66,8 @@
             props: [ 'users', 'guestUser' ],
             methods: {
                 subscribe: function(user){                    
-                    console.log(user.username);
+                    console.log(user.username + ' est inscrit');
                     vm.guests.push(user);
-                    console.log('le tableau de guests');
-                    console.log(vm.guests);
                 }
             }
         })
@@ -84,6 +83,15 @@
                     this.$emit('accept');
                 }
             }
+        })
+
+        Vue.component('guest-list', {
+            template: `
+                <div>
+                    <h2>Les invités</h2>
+                    <ul><li v-for="guest in guests" :key="guest.id">id : {{ guest.id }}, username: {{ guest.username }}, ville: {{ guest.address.city }}, email: {{ guest.email }}</li></ul>
+                </div>`,
+            props: [ 'guests' ]
         })
 
         Vue.component('my-card', {
