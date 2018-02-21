@@ -16,8 +16,10 @@
     <div id="app">
         <global-component></global-component>
         <!-- Chaque instance de my-comp possède ses propre données -->
-        <my-comp></my-comp>
-        <my-comp></my-comp>
+        <!-- Passer des données du parents vers l'enfant -->
+        <my-comp v-bind:msg="message" v-bind:color="color"></my-comp>
+        <!-- Passer des données en dur -->
+        <my-comp msg="Voici un message en dur" color="Vert"></my-comp>
     </div>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
@@ -35,7 +37,8 @@
                     randomNb: Math.floor(Math.random()*10)
                 }
             },
-            template: `<p>composant local - randomNb:{{ randomNb }} -  favouriteNb:{{ favouriteNb }} <button v-on:click="refreshNumber">RefreshNumber</button></p>`,
+            props: [ 'msg', 'color' ],
+            template: `<p>composant local - randomNb:{{ randomNb }} -  favouriteNb:{{ favouriteNb }} <button v-on:click="refreshNumber">RefreshNumber</button> {{ msg }} couleur : {{ color }}</p>`,
             methods:{
                 refreshNumber: function(){
                     this.randomNb = Math.floor(Math.random()*10)
@@ -46,7 +49,11 @@
         var vm = new Vue({
             el: '#app',
             // Inclure des composants
-            components: { 'my-comp': myComp}
+            components: { 'my-comp': myComp},
+            data:{
+                message: 'Message à passer à l\'enfant',
+                color: 'Bleu'
+            }
         })
     </script>
 </body>
