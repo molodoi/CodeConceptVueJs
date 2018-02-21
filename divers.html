@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css" media="screen,projection"/>
+    <script src="js/vue.js"></script>
+    <title>Projet 01 Vuejs2</title>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <div id="app">
+                <p>
+                    <strong>Sans filtre:</strong>
+                    {{ about }} 
+                    <br />
+                    <br />
+                    <strong>Avec un filtre 30 caractères uniquement:</strong>
+                    {{ about | shorten }}     
+                </p>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script type="text/javascript">
+
+        var vm = new Vue({
+            el: '#app',
+            data:{
+                about: `Vue (prononcé /vjuː/, comme le terme anglais view) est un framework évolutif pour construire des interfaces utilisateur. 
+                À la différence des autres frameworks monolithiques, Vue a été conçu et pensé pour pouvoir être adopté de manière incrémentale. 
+                Le cœur de la bibliothèque est concentré uniquement sur la partie vue, et il est vraiment simple de l’intégrer avec d’autres 
+                bibliothèques ou projets existants. D’un autre côté, Vue est tout à fait capable de faire tourner des applications web monopages 
+                quand il est couplé avec des outils modernes et des bibliothèques complémentaires.`
+            },
+            filters: {
+                shorten: function(value){
+                    if(value.length < 30){
+                        return value;
+                    }
+                    return value.slice(0,100) + '...';
+                }
+            }
+        })
+    </script>
+</body>
+</html>
