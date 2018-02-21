@@ -47,7 +47,7 @@
                             <small slot="infos" >Infos</small>
                         </my-other-card>
                         <!--li v-for="user in users" :key="user.id">{{ user.username }}</li-->
-                        <user-list v-bind:users="users"></user-list>
+                        <user-list v-bind:users="users" v-bind:guest-user="guests"></user-list>
                     </ul>
                 </div>
             </div>
@@ -62,10 +62,13 @@
                 <div>
                     <ul><li v-for="user in users" :key="user.id"><user-details v-bind:user="user" v-on:accept="subscribe(user)"/></li></ul>
                 </div>`,
-            props: [ 'users' ],
+            props: [ 'users', 'guestUser' ],
             methods: {
-                subscribe: function(user){
+                subscribe: function(user){                    
                     console.log(user.username);
+                    vm.guests.push(user);
+                    console.log('le tableau de guests');
+                    console.log(vm.guests);
                 }
             }
         })
@@ -96,7 +99,8 @@
             data: {
                 title: 'Lifecycle hooks',
                 usersUrl: 'https://jsonplaceholder.typicode.com/users',
-                users: []
+                users: [],
+                guests: []
             },
             // s'exécute dès l'initialisation de votre composant. les données n'ont pas été rendues réactives, et les événements n'ont pas encore été mis en place.
             beforeCreate: function() {
