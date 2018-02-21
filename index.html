@@ -45,16 +45,31 @@
                 <div class="row">
                     <div class="col s12"> 
                         <ul v-if="tasks.length > 0" class="collection">
-                            <li class="collection-header"><h4>Toutes les tâches</h4></li>
+                            <li class="collection-header">
+                                <h4>Toutes les tâches</h4>
+                            </li>
                             <li class="collection-item dismissable" v-for="task in tasks" v-bind:class="{active: task.done}">
                                 <div>
-                                    {{ task.description }}
+                                    <span v-if="!task.isInEditMode">
+                                        {{ task.description }}
+                                    </span>
+                                    <span v-else>
+                                        <input type="text" v-model="task.description">
+                                    </span>
                                     <a href="#!" class="secondary-content"><i class="material-icons green-text" v-on:click="task.done = !task.done">check</i></a>
                                     &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <a href="#!" class="secondary-content"><i class="material-icons red-text">clear</i></a>
+                                    <a href="#!" class="secondary-content"><i class="material-icons red-text" v-on:click="deleteTask(task)">clear</i></a>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href="#!" class="secondary-content"><i class="material-icons blue-text" v-on:click="editInPlace(task)">mode_edit</i></a>
                                 </div>
                             </li>
                         </ul>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col s12"> 
+                        <h3>Ajouter une tâche</h3>
                     </div>
                 </div>
                 <!--form  v-on:submit="addTask($event)"-->
@@ -63,7 +78,8 @@
                         <form  v-on:submit.prevent="addTask()">
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input type="text" id="task" placeholder="tâche à effectuer" v-model="task" />
+                                    <i class="material-icons prefix">add_circle_outline</i>
+                                    <input type="text" id="task" placeholder="Intitulé de votre tâche" v-model="task" />
                                     <label for="task">Nom de la tâche</label>
                                 </div>
                             </div>
@@ -96,12 +112,25 @@
                 //addTask: function(event){
                     //event.preventDefault();
                     //this.tasks.push(this.task);
-                    this.tasks.push({
-                        id: Date.now(),
-                        description: this.task,
-                        done: false
-                    });
-                    this.task = null;
+                    if(this.task.value != ''){                    
+                        this.tasks.push({
+                            id: Date.now(),
+                            description: this.task,
+                            done: false,
+                            isInEditMode: false
+                        });
+                        this.task = null;
+                    }
+                },
+                editInPlace: function(task){
+                    task.isInEditMode = !task.isInEditMode;
+                },
+                deleteTask: function(task){
+                    // La méthode filter() crée et retourne un nouveau tableau contenant tous les éléments du tableau d'origine qui remplissent une condition déterminée par la fonction callback.
+                    this.tasks = this.tasks.filter(
+                        // On veut garder toutes les tâches dont l'id est différent de celle qu'on veut supprimer
+                        t => t.id !== task.id
+                    ); 
                 }
             }
         })
