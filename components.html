@@ -15,6 +15,9 @@
 <body>
     <div id="app">
         <global-component></global-component>
+        <!-- Chaque instance de my-comp possède ses propre données -->
+        <my-comp></my-comp>
+        <my-comp></my-comp>
     </div>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
@@ -23,9 +26,27 @@
         Vue.component('global-component', {
             template: `<div>composant global</div>`
         })
+        
+        var myComp = {
+            // Dans un composant data doit obligatoirement être une function qui retrn un objet pour chaque instance de my-comp possède ses propre données
+            data: function(){
+                return {
+                    favouriteNb: 12,
+                    randomNb: Math.floor(Math.random()*10)
+                }
+            },
+            template: `<p>composant local - randomNb:{{ randomNb }} -  favouriteNb:{{ favouriteNb }} <button v-on:click="refreshNumber">RefreshNumber</button></p>`,
+            methods:{
+                refreshNumber: function(){
+                    this.randomNb = Math.floor(Math.random()*10)
+                }
+            }
+        }
 
         var vm = new Vue({
             el: '#app',
+            // Inclure des composants
+            components: { 'my-comp': myComp}
         })
     </script>
 </body>
