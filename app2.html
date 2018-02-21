@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css" media="screen,projection"/>
+    <script src="js/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>Projet 01 Vuejs2</title>
+</head>
+<body>
+    <div id="app">
+        <nav class="light-blue lighten-1" role="navigation">
+            <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Logo</a>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="#">Navbar Link</a></li>
+                </ul>
+
+                <ul id="nav-mobile" class="side-nav">
+                    <li><a href="#">Navbar Link</a></li>
+                </ul>
+                <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+            </div>
+        </nav>
+        <div class="section no-pad-bot" id="index-banner">
+            <div class="container">
+                <br><br>            
+                <h1 class="header center orange-text">{{ title }}</h1>
+            </div>
+        </div>
+        <div class="container">
+            <div class="section">
+                <div>
+                    {{ title }} 
+                    
+                    <h2>Utilisateurs</h2>
+                    <ul>
+                        <li v-for="user in users" :key="user.id">{{ user.username }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script type="text/javascript" src="js/init.js"></script>
+    <script type="text/javascript">
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                title: 'Lifecycle hooks',
+                usersUrl: 'https://jsonplaceholder.typicode.com/users',
+                users: []
+            },
+            // s'exécute dès l'initialisation de votre composant. les données n'ont pas été rendues réactives, et les événements n'ont pas encore été mis en place.
+            beforeCreate: function() {
+                console.log('beforeCreate');
+            },
+            // Récupérer des données avant que la vue soit affichée
+            // On peut accéder aux données réactives et les événements sont actifs. Les modèles et DOM virtuel n'ont pas encore été montés ou rendus.
+            created: function(){
+                axios.get(this.usersUrl)
+                    .then(function (response) {
+                        console.log(response.data);
+                        vm.users = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            // https://alligator.io/vuejs/component-lifecycle/
+            // s'exécute juste avant le rendu initial et après que les fonctions de modèle ou de rendu ont été compilées. 
+            // Très probablement, vous n'aurez jamais besoin d'utiliser ce crochet. Rappelez-vous, il n'est pas appelé lors du rendu côté serveur.
+            beforeMount: function() {
+		        console.log('beforeMount');
+            },
+            // On peut avoir un accès complet au composant réactif, aux templates et au DOM rendu
+            // Mounted est le hook de cycle de vie le plus souvent utilisé. Les modèles les plus fréquemment utilisés sont la récupération de données pour votre composant 
+            mounted: function() {
+                console.log('mounted');
+            },
+            // s'exécute après les modifications de données sur votre composant et le cycle de mise à jour commence, juste avant que le DOM soit patché et rendu de nouveau. 
+            // Il vous permet d'obtenir le nouvel état de toutes les données réactives sur votre composant avant qu'il ne soit réellement rendu.
+            beforeUpdate: function() {
+                console.log('beforeUpdate');
+            },
+            // s'exécute après les modifications de données sur votre composant et les re-rendus DOM. 
+            // Si vous avez besoin d'accéder au DOM après un changement de propriété, voici probablement l'endroit le plus sûr pour le faire.
+            updated: function() {
+                console.log('updated');
+            },
+            // est déclenché juste avant le démontage. Votre composant sera toujours entièrement présent et fonctionnel. 
+            // Si vous avez besoin de nettoyer des événements ou des abonnements réactifs, beforeDestroy serait probablement le moment de le faire.
+            beforeDestroy: function() {
+                console.log('beforeDestroy');
+            },
+            // Vous pouvez utiliser le hook destroy pour effectuer un nettoyage de dernière minute ou informer un serveur distant que le composant a été détruit
+            destroyed: function() {
+                console.log('destroyed');
+            }
+        })
+    </script>
+</body>
+</html>
