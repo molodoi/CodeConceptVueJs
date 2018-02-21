@@ -60,17 +60,27 @@
         Vue.component('user-list', {
             template: `
                 <div>
-                    <ul><li v-for="user in users" :key="user.id"><user-details v-bind:user="user"/></li></ul>
+                    <ul><li v-for="user in users" :key="user.id"><user-details v-bind:user="user" v-on:accept="subscribe(user)"/></li></ul>
                 </div>`,
-            props: [ 'users' ]
+            props: [ 'users' ],
+            methods: {
+                subscribe: function(user){
+                    console.log(user.username);
+                }
+            }
         })
 
         Vue.component('user-details', {
             template: `
                 <div>
-                    id : {{ user.id }}, username: {{ user.username }}, ville: {{ user.address.city }}, email: {{ user.email }}  
+                    id : {{ user.id }}, username: {{ user.username }}, ville: {{ user.address.city }}, email: {{ user.email }} <button v-on:click="acceptInvitation">Accepter l'invitation</button> 
                 </div>`,
-            props: [ 'user' ]
+            props: [ 'user' ],
+            methods: {
+                acceptInvitation: function(){
+                    this.$emit('accept');
+                }
+            }
         })
 
         Vue.component('my-card', {
