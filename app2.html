@@ -39,7 +39,8 @@
                     
                     <h2>Utilisateurs</h2>
                     <ul>
-                        <li v-for="user in users" :key="user.id">{{ user.username }}</li>
+                        <!--li v-for="user in users" :key="user.id">{{ user.username }}</li-->
+                        <user-list v-bind:users="users"></user-list>
                     </ul>
                 </div>
             </div>
@@ -49,6 +50,14 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <script type="text/javascript" src="js/init.js"></script>
     <script type="text/javascript">
+        Vue.component('user-list', {
+            template: `
+                <div>
+                    <ul><li v-for="user in users" :key="user.id">{{ user.username }}</li></ul>
+                </div>`,
+            props: [ 'users' ]
+        })
+
         var vm = new Vue({
             el: '#app',
             data: {
