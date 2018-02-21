@@ -50,17 +50,17 @@
                             </li>
                             <li class="collection-item dismissable" v-for="task in tasks" v-bind:class="{active: task.done}">
                                 <div>
-                                    <span v-if="!task.isInEditMode">
+                                    <span v-if="!task.isInEditMode" v-on:click="editInPlace(task)">
                                         {{ task.description }}
                                     </span>
                                     <span v-else>
-                                        <input type="text" v-model="task.description">
+                                        <input type="text" v-model="task.description" v-on:keyup.enter="editInPlace(task)">
                                     </span>
                                     <a href="#!" class="secondary-content"><i class="material-icons green-text" v-on:click="task.done = !task.done">check</i></a>
                                     &nbsp;&nbsp;&nbsp;&nbsp;
                                     <a href="#!" class="secondary-content"><i class="material-icons red-text" v-on:click="deleteTask(task)">clear</i></a>
                                     &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <a href="#!" class="secondary-content"><i class="material-icons blue-text" v-on:click="editInPlace(task)">mode_edit</i></a>
+                                    <a href="#!" class="secondary-content"><i class="material-icons blue-text" v-on:keyup.enter="editInPlace(task)">mode_edit</i></a>
                                 </div>
                             </li>
                         </ul>
@@ -75,7 +75,7 @@
                 <!--form  v-on:submit="addTask($event)"-->
                 <div class="row">
                     <div class="col s12"> 
-                        <form  v-on:submit.prevent="addTask()">
+                        <form v-on:submit.prevent="addTask()">
                             <div class="row">
                                 <div class="input-field col s12">
                                     <i class="material-icons prefix">add_circle_outline</i>
