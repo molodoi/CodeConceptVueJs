@@ -9,6 +9,8 @@
     <!--Import materialize.css-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css" media="screen,projection"/>
     <script src="js/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.5/lodash.js"></script>
     <title>Projet 01 Vuejs2</title>
 </head>
 <body>
@@ -33,14 +35,42 @@
                         <button v-bind:disabled="emailInvalid" v-bind:class="{ active: !emailInvalid }">M'inscrire</button>
                     </form>
                 </p>
-
+                <h2>Donnez votre avis</h2>
                 <div class="row">
                     <form class="col s12">
                         <input type="text" id="opinion" placeholder="Votre avis" v-model="opinion" class="validate" v-bind:class="[opinionValid != '' ? opinionValid : opinionValid]">
                         <span>{{ opinionMessage }}</span>
-                        <label for="opinion" data-error="valide" data-success="invalide">Donnez votre avis</label>
+                        <label for="opinion" data-error="Valide" data-success="Invalide">Donnez votre avis</label>
                     </form>
                 </div>
+                <h2>Rechercher un utilisateur Github</h2>
+                <div class="row">
+                    <form class="col s12">
+                        <input type="text" id="githubUser" placeholder="Username" v-model="githubUser" class="validate" v-bind:class="[githubUsernameValid != '' ? githubUsernameValid : githubUsernameValid]">
+                        <span>{{ githubUsernameMessage }}</span>
+                        <label for="githubUser" data-error="Valide" data-success="Invalide">Chercher un utilisateur Github</label>
+                    </form>
+                    
+                </div>
+                <div class="row" v-if="gUser != ''">
+                        <pre>{{ gUser }}</pre>
+                    <div class="col s12 m7">
+                      <div class="card">
+                        <div class="card-image">
+                          <img v-bind:src="gUser.avatar_url">
+                          <span class="card-title">{{ gUser.login }} | {{ gUser.name }}</span>
+                        </div>
+                        <div class="card-content">
+                          <p>Company: <a v-bind:href="githubUser.blog" >{{ gUser.company }}</a></p>
+                          <p v-if="gUser.bio != ''">Bio: {{ gUser.bio }}</p>
+                          <p>Location: {{ gUser.location }}</p>
+                        </div>
+                        <div class="card-action">
+                          <a v-bind:href="gUser.url" target="_blank">{{ gUser.url }}</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
             </div>
         </div>
     </div>
@@ -61,8 +91,15 @@
                 emailNewsletter: '',
                 opinion:'',
                 opinionValid:'',
-                opinionMessage: ''
+                opinionMessage: '',
+                githubUser:'',
+                gUser:'',
+                githubUsernameValid:'',
+                githubUsernameMessage:''
             },
+            // Manipuler/Concaténer des données, etc..
+            // Propriétés calculées et observateurs
+            // https://fr.vuejs.org/v2/guide/computed.html
             computed: {
                 contact: function(){
                     return 'Email: '+ this.email + ' tel: ' + this.phone;
@@ -70,8 +107,14 @@
                 emailInvalid: function(){
                     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                     return !re.test(String(this.emailNewsletter).toLowerCase());
+                },
+                avatarUrl: function(){
+                    return this.githubUser.avatar_url;
                 }
             },
+            // Filtrer une variable, etc..
+            // Permet de définir des filtres qui peuvent être utilisés pour appliquer des formatages de textes courants.
+            // https://fr.vuejs.org/v2/guide/filters.html
             filters: {
                 shorten: function(value){
                     if(value.length < 30){
@@ -80,15 +123,40 @@
                     return value.slice(0,100) + '...';
                 }
             },
+            // Observer un champ texte
+            // Réagi aux changements de données à travers l’option watch
+            // https://fr.vuejs.org/v2/guide/computed.html#Observateurs
             watch:{
                 opinion:function(value){
                     if(value.indexOf('wtf') !== -1){
-                        this.opinionValid = 'invalid';
-                        this.opinionMessage = 'Restez poli'
+                        vm.opinionValid = 'invalid';
+                        vm.opinionMessage = 'Restez poli'
                     }else{
-                        this.isOpinionValid = 'valid';  
+                        vm.isOpinionValid = 'valid';  
                     }
-                }
+                },
+                // Requete avec axios
+                // githubUser:function(username){
+                //     axios.get('https://api.github.com/users/' + username)
+                //         .then(function(data){
+                //             console.log(data);
+                //         })
+                //         .catch(function (error) {
+                //             console.log(error);
+                //         });
+                // }
+
+                // Requete avec la méthode debounce de lodash qui attend 700ms pour requêter
+                githubUser: _.debounce(function(username){
+                    axios.get('https://api.github.com/users/' + username)
+                        .then(function(response){
+                            console.log(response.data);
+                            vm.gUser = response.data;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }, 700)
             }
         })
     </script>
