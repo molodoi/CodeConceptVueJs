@@ -33,6 +33,14 @@
                         <button v-bind:disabled="emailInvalid" v-bind:class="{ active: !emailInvalid }">M'inscrire</button>
                     </form>
                 </p>
+
+                <div class="row">
+                    <form class="col s12">
+                        <input type="text" id="opinion" placeholder="Votre avis" v-model="opinion" class="validate" v-bind:class="[opinionValid != '' ? opinionValid : opinionValid]">
+                        <span>{{ opinionMessage }}</span>
+                        <label for="opinion" data-error="valide" data-success="invalide">Donnez votre avis</label>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -50,7 +58,10 @@
                 Le cœur de la bibliothèque est concentré uniquement sur la partie vue, et il est vraiment simple de l’intégrer avec d’autres 
                 bibliothèques ou projets existants. D’un autre côté, Vue est tout à fait capable de faire tourner des applications web monopages 
                 quand il est couplé avec des outils modernes et des bibliothèques complémentaires.`,
-                emailNewsletter: ''
+                emailNewsletter: '',
+                opinion:'',
+                opinionValid:'',
+                opinionMessage: ''
             },
             computed: {
                 contact: function(){
@@ -67,6 +78,16 @@
                         return value;
                     }
                     return value.slice(0,100) + '...';
+                }
+            },
+            watch:{
+                opinion:function(value){
+                    if(value.indexOf('wtf') !== -1){
+                        this.opinionValid = 'invalid';
+                        this.opinionMessage = 'Restez poli'
+                    }else{
+                        this.isOpinionValid = 'valid';  
+                    }
                 }
             }
         })
